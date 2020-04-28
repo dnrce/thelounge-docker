@@ -19,6 +19,12 @@ jobs:
           DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         run: docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
 
+      - name: Docker version
+        run: docker version
+
+      - name: buildx help
+        run: docker buildx create --help
+
       - name: Enable buildx
         run: docker buildx create --use --name build
 
