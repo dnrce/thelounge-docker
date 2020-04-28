@@ -14,7 +14,10 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Docker login
-        run: docker login
+        env:
+          DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+          DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        run: docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
 
       - name: Enable buildx
         run: docker buildx create --use --name build
