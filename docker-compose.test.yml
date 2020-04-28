@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  thelounge:
+    build: .
+    volumes:
+      - thelounge_data:/var/opt/thelounge
+  sut:
+    image: docker/docker:stable
+    volumes:
+      - ./test.sh:/test.sh
+      - ./Dockerfile:/Dockerfile
+      - thelounge_data:/thelounge_data
+    command: /test.sh
+    depends_on:
+      - thelounge
+
+volumes:
+  thelounge_data:
