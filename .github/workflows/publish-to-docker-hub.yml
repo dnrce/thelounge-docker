@@ -1,0 +1,30 @@
+name: Publish to Docker Hub
+
+on: [push]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        context: [".", alpine]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Docker login
+        run: docker login
+
+      - name: Enable buildx
+        run: docker buildx create --use --name build
+
+      - name: Build image
+        run: >
+          docker buildx build \
+            -t dnrce/thelounge:latest \
+            --platform linux/amd64,linux/arm64 \
+            --build-arg THELOUNGE_VERSION=4.1.0 \
+            --file ${{ matrix.dockerfile }}/Dockerfile \
+            --output type=image,push=true \
+            .
