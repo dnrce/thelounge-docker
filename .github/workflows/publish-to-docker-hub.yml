@@ -33,8 +33,8 @@ jobs:
       # - name: buildx help
       #   run: docker builder --help
 
-      - name: Enable buildx
-        run: docker buildx create --use --name build
+      # - name: Enable buildx
+      #   run: docker buildx create --use --name build
 
       - name: Build image
         run: >
