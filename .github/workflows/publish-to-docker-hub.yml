@@ -25,7 +25,7 @@ jobs:
           mkdir -p ~/.docker/cli-plugins
           mv docker-buildx ~/.docker/cli-plugins
 
-      - name: Register/re-register qemu binfmt_misc
+      - name: Register qemu binfmt_misc
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
       - name: Docker login
@@ -37,7 +37,7 @@ jobs:
       - name: Determine tags
         run: |
           IMAGE_TAGS=$IMAGE_NAME:latest,$IMAGE_NAME:$THELOUNGE_VERSION  
-          [ "$BUILD_CONTEXT" != "." ] && IMAGE_TAGS=$IMAGE_NAME:$THELOUNGE_VERSION-${{ matrix.build_context }}
+          [ "${{ matrix.build_context }}" != "." ] && IMAGE_TAGS=$IMAGE_NAME:$THELOUNGE_VERSION-${{ matrix.build_context }}
           echo "::set-env name=IMAGE_TAGS::$IMAGE_TAGS"
 
       - name: Create buildx builder
