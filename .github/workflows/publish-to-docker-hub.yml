@@ -12,6 +12,8 @@ jobs:
         build_context: [".", alpine]
     env:
       DOCKER_CLI_EXPERIMENTAL: enabled
+      IMAGE_NAME: dnrce/thelounge
+      THELOUNGE_VERSION: 4.1.0
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -23,13 +25,8 @@ jobs:
           mkdir -p ~/.docker/cli-plugins
           mv docker-buildx ~/.docker/cli-plugins
 
-      - name: Reset qemu
-        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-      # - name: Enable experimental Docker features
-      #   run: "echo '{\"experimental\": true}' | sudo tee /etc/docker/daemon.json"
-
-      # - name: Restart Docker
-      #   run: sudo service docker restart
+      - name: Register/re-register qemu binfmt_misc
+        run: docker run --rm --privileged multiarch/qemu-user-static:register --reset -p yes
 
       - name: Docker login
         env:
@@ -37,21 +34,21 @@ jobs:
           DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         run: docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
 
-      - name: Docker version
-        run: docker version
-
-      - name: buildx help
-        run: docker buildx --help
-
-      - name: Enable buildx
-        run: docker buildx create --use --name build
-
+      - name: Determine tags
+        run: |
+          IMAGE_TAGS=$IMAGE_NAME:latest,$IMAGE_NAME:$THELOUNGE_VERSION  
+          [ "$BUILD_CONTEXT" != "." ] && IMAGE_TAGS=$IMAGE_NAME:$THELOUNGE_VERSION-$BUILD_CONTEXT
+          echo ::set-env IMAGE_TAGS=$IMAGE_TAGS
+      
       - name: Build image
+        env:
+          TARGET_PLATFORMS=linux/amd64,linux/arm64
         run: >
+          docker buildx create --use --name build
           docker buildx build \
-            -t dnrce/thelounge:latest \
-            --platform linux/amd64,linux/arm64 \
-            --build-arg THELOUNGE_VERSION=4.1.0 \
+            -t $IMAGE_TAGS \
+            --platform $TARGET_PLATFORMS \
+            --build-arg THELOUNGE_VERSION=$THELOUNGE_VERSION \
             --file ${{ matrix.build_context }}/Dockerfile \
             --output type=image,push=true \
             .
