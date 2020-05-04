@@ -20,7 +20,7 @@ jobs:
         run: |
           curl -s -L -o docker-buildx $(curl -s https://api.github.com/repos/docker/buildx/releases/latest | jq -r '.assets[] | select(.name | test("linux-amd64")) | .browser_download_url')
           mkdir -p ~/.docker/cli-plugins
-          mv buildx ~/.docker/cli-plugins
+          mv docker-buildx ~/.docker/cli-plugins
 
       # - name: Enable experimental Docker features
       #   run: "echo '{\"experimental\": true}' | sudo tee /etc/docker/daemon.json"
