@@ -42,7 +42,7 @@ jobs:
       
       - name: Build image
         env:
-          TARGET_PLATFORMS=linux/amd64,linux/arm64
+          TARGET_PLATFORMS: linux/amd64,linux/arm64
         run: >
           docker buildx create --use --name build
           docker buildx build \
