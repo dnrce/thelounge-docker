@@ -6,6 +6,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    container: docker:stable
     strategy:
       matrix:
         build_context: [".", alpine]
@@ -15,11 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: Enable experimental Docker features
-        run: "echo '{\"experimental\": true}' | sudo tee /etc/docker/daemon.json"
+      # - name: Enable experimental Docker features
+      #   run: "echo '{\"experimental\": true}' | sudo tee /etc/docker/daemon.json"
 
-      - name: Restart Docker
-        run: sudo service docker restart
+      # - name: Restart Docker
+      #   run: sudo service docker restart
 
       - name: Docker login
         env:
@@ -31,7 +32,7 @@ jobs:
         run: docker version
 
       - name: buildx help
-        run: docker builder --help
+        run: docker buildx --help
 
       - name: Enable buildx
         run: docker buildx create --use --name build
