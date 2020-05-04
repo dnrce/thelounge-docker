@@ -47,7 +47,6 @@ jobs:
         env:
           TARGET_PLATFORMS: linux/amd64,linux/arm64
         run: >
-          
           docker buildx build \
             -t $IMAGE_TAGS \
             --platform $TARGET_PLATFORMS \
