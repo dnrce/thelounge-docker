@@ -37,8 +37,8 @@ jobs:
       - name: Determine tags
         run: |
           IMAGE_TAGS=$IMAGE_NAME:latest,$IMAGE_NAME:$THELOUNGE_VERSION  
-          [ "$BUILD_CONTEXT" != "." ] && IMAGE_TAGS=$IMAGE_NAME:$THELOUNGE_VERSION-$BUILD_CONTEXT
-          echo ::set-env IMAGE_TAGS=$IMAGE_TAGS
+          [ "$BUILD_CONTEXT" != "." ] && IMAGE_TAGS=$IMAGE_NAME:$THELOUNGE_VERSION-${{ matrix.build_context }}
+          echo "::set-env name=IMAGE_TAGS::$IMAGE_TAGS"
 
       - name: Create buildx builder
         run: docker buildx create --use --name build
