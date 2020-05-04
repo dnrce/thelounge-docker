@@ -33,6 +33,8 @@ jobs:
 
       - name: buildx help
         run: docker buildx --help
+        env:
+          DOCKER_CLI_EXPERIMENTAL: enabled
 
       - name: Enable buildx
         run: docker buildx create --use --name build
