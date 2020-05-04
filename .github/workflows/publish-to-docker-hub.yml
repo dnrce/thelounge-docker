@@ -19,6 +19,7 @@ jobs:
       - name: Install buildx
         run: |
           curl -s -L -o docker-buildx $(curl -s https://api.github.com/repos/docker/buildx/releases/latest | jq -r '.assets[] | select(.name | test("linux-amd64")) | .browser_download_url')
+          chmod +x docker-buildx
           mkdir -p ~/.docker/cli-plugins
           mv docker-buildx ~/.docker/cli-plugins
 
@@ -39,8 +40,6 @@ jobs:
 
       - name: buildx help
         run: docker buildx --help
-        env:
-          DOCKER_CLI_EXPERIMENTAL: enabled
 
       - name: Enable buildx
         run: docker buildx create --use --name build
