@@ -26,7 +26,7 @@ jobs:
           mv docker-buildx ~/.docker/cli-plugins
 
       - name: Register/re-register qemu binfmt_misc
-        run: docker run --rm --privileged multiarch/qemu-user-static:register --reset -p yes
+        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 
       - name: Docker login
         env:
